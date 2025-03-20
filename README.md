@@ -3,6 +3,7 @@
 # No-IP Updater (`upd_noIP`)
 
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/)
+[![PyPI](https://img.shields.io/pypi/v/upd_noIP)](https://pypi.org/project/upd_noIP/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](https://opensource.org/licenses/MIT)
 
 Модуль `upd_noIP` призначений для автоматичного оновлення IP-адреси на сервісі **No-IP**. Він підтримує IPv4 та IPv6, зберігає останні налаштування та працює на всіх основних платформах: **Windows**, **Linux**, **macOS** та **Android (Termux)**.
