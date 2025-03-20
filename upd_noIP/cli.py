@@ -11,9 +11,9 @@ from .agents import USER_AGENTS_DICT
 CONFIG_PATH = Path.home() / ".noip_updater_config.ini"
 
 DEFAULTS = {
-    "username": "kxgpxtt",  # Логін No-IP
-    "password": "C52Vtk8G1oYu",  # Пароль No-IP
-    "hostname": "qwic.sytes.net",  # Домен No-IP
+    "username": "#username",  # Логін No-IP
+    "password": "#password",  # Пароль No-IP
+    "hostname": "#hostname",  # Домен No-IP
     "check_interval": "300",   # Інтервал перевірки IP (секунди) [5 хв]
     "retry_interval": "20",    # Інтервал повторної спроби (секунди)
     "log_info": "True",  # Логування INFO
