@@ -13,8 +13,8 @@ setup(
        },
        description="Модуль для оновлення IP на No-IP",
        author="Ваше ім'я",
-       author_email="ваш.email@example.com",
-       url="https://github.com/ваш-репозиторій/upd_noIP",
+       author_email="gosdepyxa@gmail.com",
+       url="https://github.com/DepyXa/upd_noIP",
        classifiers=[
            "Programming Language :: Python :: 3",
            "License :: OSI Approved :: MIT License",
