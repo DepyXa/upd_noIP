@@ -12,11 +12,33 @@
 
 ## Встановлення
 
-Ви можете встановити модуль через `pip`:
+### 1. Встановлення через `pip`
 
 ```bash
 pip install upd_noIP
 ```
+### 2. Встановлення через `git clone`
+
+1. Клонуйте репозиторій:
+   ```bash
+   git clone https://github.com/ваш-репозиторій/upd_noIP.git
+   ```
+
+2. Перейдіть у папку проекту:
+   ```bash
+   cd upd_noIP
+   ```
+
+3. Встановіть залежності:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Запустіть модуль:
+   ```bash
+   python -m upd_noIP.cli username=ваш_логін password=ваш_пароль hostname=ваш_домен
+   ```
+   
 
 ---
 
