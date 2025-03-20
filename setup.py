@@ -12,7 +12,7 @@ setup(
            ],
        },
        description="Модуль для оновлення IP на No-IP",
-       author="Ваше ім'я",
+       author="Дмитро Колоднянський",
        author_email="gosdepyxa@gmail.com",
        url="https://github.com/DepyXa/upd_noIP",
        classifiers=[
