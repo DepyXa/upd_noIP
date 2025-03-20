@@ -35,7 +35,9 @@ class NoIPUpdater:
         return "Basic " + base64.b64encode(auth_string.encode()).decode()
 
     def _get_random_user_agent(self) -> str:
-        """Отримує випадковий User-Agent."""
+    """Отримує випадковий User-Agent."""
+        if not self.user_agents:
+            raise ValueError("Список User-Agent порожній. Додайте хоча б один User-Agent.")
         return random.choice(self.user_agents)
 
     async def _create_session(self):
@@ -105,7 +107,8 @@ class NoIPUpdater:
         await self._create_session()
         
         while True:
-            try:
+            if 0 == 0:
+            #try:
                 new_ip = await self.get_current_ip()
 
                 if new_ip is None:
@@ -132,9 +135,9 @@ class NoIPUpdater:
                     if "badagent" in result.lower() and self.log_levels["error"]:
                         logger.warning("User-Agent заблоковано! Змінюємо...")
 
-            except Exception as e:
-                if self.log_levels["error"]:
-                    logger.error(f"Виникла помилка: {e}")
+            #except Exception as e:
+                #if self.log_levels["error"]:
+                    #logger.error(f"Виникла помилка: {e}")
 
             await asyncio.sleep(self.check_interval)
 
