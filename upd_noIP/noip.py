@@ -2,8 +2,6 @@ import aiohttp
 import base64
 import asyncio
 import random
-import time
-import ipaddress
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -11,14 +9,24 @@ logger = logging.getLogger(__name__)
 
 class NoIPUpdater:
     def __init__(self, username: str, password: str, hostname: str, user_agents, 
-                 check_interval: int = 300, retry_interval: int = 30, 
+                 record_type: str = "A", check_interval: int = 300, retry_interval: int = 30, 
                  log_levels: dict = None):
         """
         Ініціалізація асинхронного об'єкта для оновлення No-IP.
+        
+        :param username: Логін No-IP.
+        :param password: Пароль No-IP.
+        :param hostname: Хост, який потрібно оновлювати.
+        :param user_agents: Список User-Agent для використання.
+        :param record_type: Тип запису ("A" для IPv4 або "AAAA" для IPv6).
+        :param check_interval: Інтервал перевірки зміни IP (у секундах).
+        :param retry_interval: Інтервал повторної спроби при втраті з'єднання (у секундах).
+        :param log_levels: Налаштування логування.
         """
         self.username = username
         self.password = password
         self.hostname = hostname
+        self.record_type = record_type.upper()
         self.check_interval = check_interval
         self.retry_interval = retry_interval
         self.auth_header = self._generate_auth_header()
@@ -28,6 +36,9 @@ class NoIPUpdater:
         self.session = None
         self.notified_no_internet = False
         self.user_agents = user_agents
+
+        if self.record_type not in ["A", "AAAA"]:
+            raise ValueError("Тип запису повинен бути 'A' (IPv4) або 'AAAA' (IPv6).")
 
     def _generate_auth_header(self) -> str:
         """Генерує Basic Authorization заголовок."""
@@ -46,7 +57,7 @@ class NoIPUpdater:
             self.session = aiohttp.ClientSession()
 
     async def get_current_ip(self) -> str:
-        """Отримує IP-адресу, перевіряє формат IPv6 та використовує IPv4 за необхідності."""
+        """Отримує IP-адресу в залежності від обраного типу запису."""
         async def fetch_ip(url: str) -> str:
             """Допоміжна функція для отримання IP."""
             try:
@@ -57,12 +68,12 @@ class NoIPUpdater:
                     logger.error(f"Помилка з'єднання: {e}")
                 return None
 
-        ip = await fetch_ip("https://api64.ipify.org?format=text")
-
-        if ip and ":" in ip:  # Проста перевірка на IPv6
-            if self.log_levels["info"]:
-                logger.info(f"Отримано IPv6 ({ip}), пробуємо отримати IPv4...")
+        if self.record_type == "A":
             ip = await fetch_ip("https://api4.ipify.org?format=text")
+        elif self.record_type == "AAAA":
+            ip = await fetch_ip("https://api6.ipify.org?format=text")
+        else:
+            raise ValueError("Невірний тип запису. Використовуйте 'A' або 'AAAA'.")
 
         return ip
 
