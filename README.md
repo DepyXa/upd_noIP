@@ -28,7 +28,7 @@
 
 1. Клонуйте репозиторій:
    ```bash
-   git clone https://github.com/ваш-репозиторій/upd_noIP.git
+   git clone https://github.com/DepyXa/upd_noIP.git
    ```
 
 2. Перейдіть у папку проекту:
