@@ -4,43 +4,45 @@ import signal
 import platform
 from configparser import ConfigParser
 from pathlib import Path
-from .noip import NoIPUpdater
-from .agents import USER_AGENTS_DICT
+from typing import Dict, Any
+from noip import NoIPUpdater
+from agents import USER_AGENTS_DICT
 
 # Шлях до файлу конфігурації
 CONFIG_PATH = Path.home() / ".noip_updater_config.ini"
 
-DEFAULTS = {
+DEFAULTS: Dict[str, str] = {
     "username": "#username",  # Логін No-IP
     "password": "#password",  # Пароль No-IP
     "hostname": "#hostname",  # Домен No-IP
-    "check_interval": "300",   # Інтервал перевірки IP (секунди) [5 хв]
-    "retry_interval": "20",    # Інтервал повторної спроби (секунди)
-    "log_info": "True",  # Логування INFO
-    "log_update": "True", # Логування UPDATE
-    "log_error": "True"   # Логування ERROR
+    "record_type": "AAAA",    # Тип запису (A для IPv4, AAAA для IPv6)
+    "check_interval": "300",  # Інтервал перевірки IP (секунди) [5 хв]
+    "retry_interval": "20",   # Інтервал повторної спроби (секунди)
+    "log_info": "True",       # Логування INFO
+    "log_update": "True",     # Логування UPDATE
+    "log_error": "True"       # Логування ERROR
 }
 
-def load_config():
+def load_config() -> Dict[str, str]:
     """
     Завантажує конфігурацію з файлу, якщо він існує.
     """
     config = ConfigParser()
     if CONFIG_PATH.exists():
         config.read(CONFIG_PATH)
-        return config["DEFAULT"]
+        return dict(config["DEFAULT"])
     return {}
 
-def save_config(args):
+def save_config(args: Dict[str, str]) -> None:
     """
     Зберігає конфігурацію у файл.
     """
     config = ConfigParser()
     config["DEFAULT"] = args
-    with open(CONFIG_PATH, "w") as config_file:
+    with open(CONFIG_PATH, "w", encoding="utf-8") as config_file:
         config.write(config_file)
 
-def parse_args():
+def parse_args() -> Dict[str, str]:
     """
     Розбирає аргументи командного рядка та повертає оновлений словник.
     """
@@ -48,9 +50,7 @@ def parse_args():
     config = load_config()
 
     # Завантажуємо значення з конфігурації, якщо вони є
-    for key in args:
-        if key in config:
-            args[key] = config[key]
+    args.update({k: v for k, v in config.items() if k in args})
 
     # Оновлюємо значення з аргументів командного рядка
     for arg in sys.argv[1:]:
@@ -59,12 +59,17 @@ def parse_args():
             if key in args:
                 args[key] = value
 
+    # Перевірка коректності типу запису
+    if args["record_type"].upper() not in {"A", "AAAA"}:
+        print("Помилка: тип запису повинен бути 'A' або 'AAAA'.")
+        sys.exit(1)
+
     # Зберігаємо оновлену конфігурацію
     save_config(args)
 
     return args
 
-async def main():
+async def main() -> None:
     """
     Основна функція для запуску моніторингу IP та оновлення No-IP.
     """
@@ -81,6 +86,7 @@ async def main():
         username=args["username"],
         password=args["password"],
         hostname=args["hostname"],
+        record_type=args["record_type"].upper(),
         user_agents=USER_AGENTS_DICT,
         check_interval=int(args["check_interval"]),
         retry_interval=int(args["retry_interval"]),
@@ -91,12 +97,12 @@ async def main():
         }
     )
 
-    def signal_handler(sig, frame):
+    def signal_handler(sig: int, frame: Any) -> None:
         """Обробник сигналів для завершення роботи."""
         print("\nОтримано сигнал завершення. Завершення роботи...")
         asyncio.create_task(shutdown())
 
-    async def shutdown():
+    async def shutdown() -> None:
         """Коректне завершення роботи."""
         await updater.close()
         sys.exit(0)
@@ -106,7 +112,7 @@ async def main():
         # На Windows використовуємо SIGINT (Ctrl + C)
         signal.signal(signal.SIGINT, signal_handler)
     else:
-        # На Linux, macOS та Termux використовуємо SIGQUIT (Ctrl + Q)
+        # На Linux, macOS використовуємо SIGQUIT (Ctrl + Q)
         signal.signal(signal.SIGQUIT, signal_handler)
 
     try:
