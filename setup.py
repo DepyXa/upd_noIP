@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
        name="upd_noIP",
-       version="0.1.0",
+       version="0.1.2",
        packages=find_packages(),
        install_requires=[
            "aiohttp>=3.8.0",
@@ -11,7 +11,7 @@ setup(
                "upd-noip=upd_noIP.cli:main",
            ],
        },
-       description="Модуль для оновлення IP на No-IP",
+       description="Модуль для автоматичного оновлення IP на No-IP (завжди онлайн)",
        author="Дмитро Колоднянський",
        author_email="gosdepyxa@gmail.com",
        url="https://github.com/DepyXa/upd_noIP",
