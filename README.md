@@ -21,7 +21,7 @@
 2. Після встановлення модуль можна запустити з командного рядка:
 
    ```bash
-   upd-noip username=ваш_логін password=ваш_пароль hostname=ваш_домен
+   upd-noip username="ваш_логін" password="ваш_пароль" hostname="ваш_домен"
    ```
    
 ### 2. Встановлення через `git clone`
@@ -43,7 +43,7 @@
 
 4. Запустіть модуль:
    ```bash
-   python -m upd_noIP.cli username=ваш_логін password=ваш_пароль hostname=ваш_домен
+   python -m upd_noIP.cli username="ваш_логін" password="ваш_пароль" hostname="ваш_домен"
    ```
    
 
@@ -56,6 +56,7 @@
 | `username`     | Логін для No-IP                                                     | `user123`              |
 | `password`     | Пароль для No-IP                                                    | `pass123`              |
 | `hostname`     | Домен, який потрібно оновити                                        | `example.ddns.net`     |
+| `record_type`  | Тип домену (`A` або `AAAA`)                                         | `AAAA`                 |
 | `check_interval` | Інтервал перевірки зміни IP (у секундах, за замовчуванням: 300)    | `600`                  |
 | `retry_interval` | Інтервал повторної спроби при відсутності інтернету (у секундах)   | `30`                   |
 | `log_info`     | Логування інформаційних повідомлень (`true` або `false`)            | `true`                 |
@@ -65,7 +66,7 @@
 ### Приклад
 
 ```bash
-upd-noip username=user123 password=pass123 hostname=example.ddns.net check_interval=600 retry_interval=30
+upd-noip username="user123" password="pass123" hostname="example.ddns.net" record_type="AAAA" check_interval=600 retry_interval=30
 ```
 
 ---
@@ -91,6 +92,13 @@ upd-noip
 - **Крос-платформність**: Працює на Windows, Linux, macOS та Android (Termux).
 - **Логування**: Модуль підтримує різні рівні логування (інформація, оновлення, помилки).
 
+---
+
+## Часто задавдані запитання 
+
+### 1. У мене мобільний пристрій на мобільному операторі, що я можу зробити:
+    Для початку потрібно створити на No-IP домен на типі AAAA, після чтого можна використовувати цей модуль.
+    Навідь не потрібно вказувати при запуску record_type="AAAA", адже цей тип є по умовчанням.
 ---
 
 ## Приклад файлу конфігурації
@@ -130,6 +138,7 @@ log_error = true
 - **Дмитро Колоднянський**
 - **Email**: gosdepyxa@gmail.com
 - **GitHub**: [GitHub](https://github.com/DepyXa)
+- **Telegram**: [Telegram](https://t.me/depyxa)
 
 ---
 
